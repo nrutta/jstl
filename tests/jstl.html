@@ -1,0 +1,164 @@
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="../jstl.js"></script>
+<script>
+
+$(document).ready(function () {
+ 
+    $('table button').bind('click', function(evt) {
+        var typ = this.getAttribute('data-test-type');
+        var row = $(this).closest('tr');
+        var out = $(row).find('.output');
+        var func = null;
+
+        switch (typ) {
+        case 'binarytree': func = binary_tree_test; break;
+        case 'queue':      func = queue_test; break;
+        case 'linkedlist': func = linked_list_test; break;
+        case 'stack':      func = stack_test; break;
+        default:           alert("invalid test"); return;
+        }
+
+        func(out);
+    });
+
+});
+
+function binary_tree_test(out) {
+    try {
+        var agg = [];
+        var s = new jstl.util.BinaryTree({assertType: 'number'});
+        s.insert(2);
+        s.insert(4);
+        s.insert(8);
+        s.insert(1);
+        s.insert(3);
+        s.insert(7);
+        s.insert(6);
+
+        function cb(o) {
+            alert("value is: " + o);
+        }
+
+        function cb_depth(o) {
+            agg.push(o);
+        }
+        
+        s.traverse("inorder", cb);
+        s.traverse("depth", cb_depth);
+        debugger;
+        alert("and now by depth (expected: 2 1 4 3 8 7 6,  got: " + agg.toString() + ")");
+
+        $(out).html("tests passed");
+    }
+    catch (e) {
+        debugger;
+    }
+
+}
+
+
+
+function queue_test() {
+    debugger;
+    try {
+        var s = new jstl.util.Queue({max: 2});
+        s.add(2);
+        s.add(4);
+        s.add(8);
+        for (var i = 0; i < 5; i++)  {
+            var x = s.remove();
+            debugger;
+        }
+    }
+    catch (e) {
+        debugger;
+    }
+};
+
+
+function stack_test() {
+    var x = jstl;
+
+    debugger;
+    var s = new jstl.util.Stack();
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    try {
+        for (var i = 0; i < 5; i++)  {
+            var x = s.pop();
+            debugger;
+        }
+    }
+    catch (e) {
+        debugger;
+    }
+};
+
+
+function linked_list_test() {
+    
+    try {
+        var ll = new jstl.util.LinkedList(
+                     { assertType: 'number',
+                       comparator: {
+                           compare: function() {return false;}, 
+                           equals: function(o) { return false; }
+                     } });
+        var b = ll.isEmpty();
+        ll.add(14);
+        ll.add(29);
+        ll.add(13, 1);
+        ll.addFirst(666);
+        var contains = ll.lastIndexOf(14);
+        var arr = ll.toArray();
+        var val = ll.get(2);
+        var iter = ll.iterator();
+        while (iter.hasNext()) {
+            var x = iter.next();
+        }
+
+        debugger;
+        var xxx = jstl.util.Collections.sort(ll);
+        var rem = ll.remove(3);
+        rem = ll.removeFirst();
+        rem = ll.removeLast();
+    } catch (e) {
+        debugger;
+    }
+
+}
+
+</script>
+</head>
+
+<body onload="init()">
+<p>This is the main test harness for jstl</p>
+
+<table width="90%" border=1>
+<colgroup>
+    <col width="30%">
+    <col width="70%">
+</colgroup>
+<tr>
+    <td><button data-test-type="binarytree">BinaryTree Tests</button></td>
+    <td><span class=output></span></td>
+</tr>
+<tr>
+    <td><button data-test-type="queue">Queue Tests</button></td>
+    <td><span class=output></span></td>
+</tr>
+<tr>
+    <td><button data-test-type="stack">Stack Tests</button></td>
+    <td><span class=output></span></td>
+</tr>
+<tr>
+    <td><button data-test-type="linkedlist">LinkedList Tests</button></td>
+    <td><span class=output></span></td>
+</tr>
+</table>
+
+</body>
+</html
