@@ -47,7 +47,7 @@ function binary_tree_test(out) {
         
         s.traverse("inorder", cb);
         s.traverse("depth", cb_depth);
-        debugger;
+        
         alert("and now by depth (expected: 2 1 4 3 8 7 6,  got: " + agg.toString() + ")");
 
         $(out).html("tests passed");
@@ -61,7 +61,7 @@ function binary_tree_test(out) {
 
 
 function queue_test() {
-    debugger;
+    
     try {
         var s = new jstl.util.Queue({max: 2});
         s.add(2);
@@ -69,7 +69,6 @@ function queue_test() {
         s.add(8);
         for (var i = 0; i < 5; i++)  {
             var x = s.remove();
-            debugger;
         }
     }
     catch (e) {
@@ -81,7 +80,6 @@ function queue_test() {
 function stack_test() {
     var x = jstl;
 
-    debugger;
     var s = new jstl.util.Stack();
     s.push(1);
     s.push(2);
@@ -89,7 +87,6 @@ function stack_test() {
     try {
         for (var i = 0; i < 5; i++)  {
             var x = s.pop();
-            debugger;
         }
     }
     catch (e) {
@@ -120,7 +117,6 @@ function linked_list_test() {
             var x = iter.next();
         }
 
-        debugger;
         var xxx = jstl.util.Collections.sort(ll);
         var rem = ll.remove(3);
         rem = ll.removeFirst();
