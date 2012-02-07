@@ -10,6 +10,7 @@
         this.level = null;
         this.left = prev || null;
         this.right = next || null;
+        this.parent = null;
     }
   
     TreeNode.prototype.getLevel = function () { return this.level; };
@@ -18,30 +19,35 @@
     TreeNode.prototype.getValue = function () { return this.value; };
     TreeNode.prototype.setLeft = function (n) { this.left = n; return this; };
     TreeNode.prototype.setRight = function (n) { this.right = n; return this; };
-  
+
     /**
-     * BinaryTreeIterator. Iterator for LinkedLists. This is defined here such that the iterator cannot be created
-     * on its own -- you must retrieve it from a valid LinkedList.
+     * BinaryTreeIterator. Iterator for a BinaryTree. This is defined here such that the iterator cannot be created
+     * on its own -- you must retrieve it from a valid BinaryTree. The starting point is the smallest value in the
+     * tree.
+     *
+     * The Iterator position is defined by the value of this.currentNode:
+     *     - this.currentNode === undefined means cursor is before first element
+     *     - this.currentNode === null means cursor is after last element
+     *     - this.currentNode means cursor is somewhere in the valid range of elements 
      *
      * @constructor
      * @this {BinaryTreeIterator}
      */
-    BinaryTreeIterator = function(list) {
-        this.list = list;
-        this.cursorPosition = 0;  // cursorPosition is always to the left of the specified element
-    }
+    function BinaryTreeIterator(tree) {
+        this.tree = tree;
+        this.currentNode = undefined;
+    };
 
     /**
      * Return true if this iterator has more elements left when traversing in the forward direction
      *
      * @return {boolean}
      */
-    BinaryTreeIterator.prototype.hasNext = function() {
-        var cursize = this.list.size();
-        if (cursize != 0 && this.cursorPosition < cursize)
-            return true;
-        else
-            return false;
+    BinaryTreeIterator.prototype.hasNext = function () {
+        var save = this.currentNode;
+        var nxt = this.next();
+        this.currentNode = save;
+        return (nxt) ? true : false;
     };
 
     /**
@@ -58,70 +64,125 @@
     };
 
     /**
-     * Return the next element in the list
+     * Return the next element in the tree
      *
      * @return {Object} element at the next position in the list
      * @throws {jstl.Exception} if there is no next element
      */
     BinaryTreeIterator.prototype.next = function() {
-        var cursize = this.list.size();
-        var obj;
+        var ptr, parent;
 
-        if (cursize == 0 || this.cursorPosition >= cursize)
-           throw new jstl.Exception('NoSuchElementException', 'Iterator is at the end of the list');
-
-        obj = this.list.get(this.cursorPosition);
-        this.cursorPosition += 1;
-        return obj;
+        if (this.currentNode === undefined) {
+            // before beginning, so get the first element in the tree.
+            for (ptr = this.tree.root; ptr; ptr = ptr.left) {
+                if (ptr.left === null) {
+                    this.currentNode = ptr;
+                    break;
+                }
+            }
+            
+            // check for an empty tree
+            if (this.currentNode === undefined) {
+                return null;
+            }
+        }
+        else if (this.currentNode === null) {
+            // at the end of the tree (or tree is null)
+            return null;
+        }
+        else if (this.currentNode.right) {
+            // if there is a right-branch, get the left most leaf on this branch as the next value
+            for (ptr = this.currentNode.right; ;) {
+                if (ptr.left) {
+                    ptr = ptr.left;
+                }
+                else if (ptr.right) {
+                    ptr = ptr.right;
+                }
+                else {
+                    this.currentNode = ptr;
+                    break;
+                }
+            }
+        }
+        else {
+            // traverse back up this branch, and find the parent from which we come from its
+            // left branch.
+            for (ptr = this.currentNode; ptr.parent; ptr = ptr.parent) {
+                if (ptr.parent.left === ptr) {
+                    this.currentNode = ptr.parent;
+                    break;
+                }
+            }
+            
+            // if we back up the tree to the root from the right branch, there are no more left;
+            if (ptr.parent === null) {
+                this.currentNode = null;
+            }
+        }
+        
+        return (this.currentNode) ? this.currentNode.getValue() : null;
     };
 
     /**
-     * Return the index of the element that would be returned by a call to 'next'. Return the
-     * size of the list if the iterator is at the end of the list.
+     * Return the previous element in the tree.
      *
-     * @return {integer}
-     */
-    BinaryTreeIterator.prototype.nextIndex = function() {
-        var cursize = this.list.size();
-
-        if (cursize == 0 || this.cursorPosition >= cursize)
-            return cursize;
-
-        return cursorPosition;
-    };
-
-    /**
-     * add the specified element to the list at the specified index. If an index value isn't
-     * specified, add the element to the end of the list
-     *
-     * @return {Object}
-     * @throws {jstl.Exception} if the cursor is before the first element or there are no elements on the list
+     * @return {Object} element at the previous position in the tree
+     * @throws {jstl.Exception} if the cursor is before the first element or there are no elements in the tree
+     * 
      */
     BinaryTreeIterator.prototype.previous = function() {
-        var cursize = this.list.size();
-        var obj;
+        var ptr, parent;
 
-        if (cursize == 0 || this.cursorPosition <= 0)
-           throw new jstl.Exception('NoSuchElementException', 'Cannot get element before beginning cursor position');
-
-        obj = this.list.get(this.cursorPosition);
-        this.cursorPosition -= 1;
-        return obj;
-    };
-
-    /**
-     * Return the index of the element that would be returned by a call to 'previous'. If the
-     * iterator is at the beginning of the list, return -1.
-     *
-     * @return {integer}
-     */
-    BinaryTreeIterator.prototype.previousIndex = function() {
-        var cursize = this.list.size();
-
-        if (cursize == 0 || this.cursorPosition <= 0)
-            return -1;
-
-        return cursorPosition;
+        if (this.currentNode === undefined) {
+            // before beginning
+            return null;
+        }
+        else if (this.currentNode === null) {
+            // we're at the end, so find the last element and return that.
+            for (ptr = this.tree.root; ptr; ptr = ptr.right) {
+                if (ptr.right === null) {
+                    this.currentNode = ptr;
+                    break;
+                }
+            }
+            
+            // check for an empty tree
+            if (this.currentNode == null) {
+                return null;
+            }
+        }
+        else if (this.currentNode.left) {
+            // find the right-most element in the left branch, this will be the next smallest value.
+            //     * get the (left) child of the current node.
+            //          - if there isn't a right branch on this child, we've found the next smallest value
+            //          - if there is a right branch, traverse down the right branch until you find a node
+            //            that doesn't have a right branch. thats the next smallest value.
+            //
+            for (ptr = this.currentNode.left; ptr; ptr = ptr.right) {
+                if (ptr.right === null) {
+                    this.currentNode = ptr;
+                    break;
+                }
+            }
+        }
+        else {
+            // traverse back up this branch, and find the parent from which we come from its
+            // right branch.
+            for (ptr = this.currentNode; ptr.parent; ptr = ptr.parent) {
+                if (ptr.parent.right === ptr) {
+                    this.currentNode = ptr.parent;
+                    break;
+                }
+            }
+            
+            // if we back up the tree to the root from the right branch, there are no more left;
+            if (ptr.parent === null) {
+                this.currentNode = undefined;
+            }
+        }
+        
+        return (this.currentNode) ? this.currentNode.getValue() : null;
     };
 
     /**
@@ -173,21 +234,10 @@
      * @return {boolean} whether or not the element exists in the list.
      */
     BinaryTree.prototype.contains = function(o) {
-        var ptr;
-        if ( typeof o == "object") {
-            for (ptr = this.head; ptr; ptr = ptr.next) {
-                if (ptr.value.equals(o))
-                    return true;
-            }
-        }
-        else {
-            for (ptr = this.head; ptr; ptr = ptr.next) {
-                if (ptr.value === o)
-                    return true;
-            }
-        }
-
-        return false; 
+        if (this.get(o) !== null)
+            return true;
+        else
+            return false; 
     };
 
     /**
@@ -197,20 +247,36 @@
      * @return {Object} The object at the specified location
      * @throws {jstl.Exception} if the index is out of range (index < 0 || index >= size())
      */
-    BinaryTree.prototype.get = function(i) {
+    BinaryTree.prototype.get = function(o) {
         var ptr;
 
-        if (i == undefined || i < 0 || i >= this.size()) {
-            throw new jstl.Exception('IndexOutOfBoundsException', 'Index ' + i + ' is out of range');
+        function preorder(node, o) {
+            var val;
+            
+            if (node === null)
+                return null;
+            
+            val = node.getValue();
+            cmp = comparator.compare(val, o);
+            if (cmp === 0)
+                return node;
+           
+            if (cmp === 1) {
+                return preorder(node.left, o);
+            }
+            else {
+                return preorder(node.right, o);
+            }
         }
-
-        ptr = findByIndex(this, i);
-        return ptr.value;
     };
 
     BinaryTree.prototype.insert = function (o) {
         var compareFunc = this.comparator.getCompareFunction();
+        this.comparator.assertElementType(o);
         
+        /*
+         * DEPRECATED
+         * 
         function insertNode(t, val) {
             var tval;
 
@@ -235,7 +301,8 @@
             return false;
         }
         
-        this.comparator.assertElementType(o);
+         */
+        
         //insertNode(this.root, o);
 
         if (this.root == null) {
@@ -247,6 +314,7 @@
             if (compareFunc(o, ptr.getValue()) <= 0) {
                 if (ptr.left === null) {
                     ptr.left = new TreeNode(o);
+                    ptr.left.parent = ptr;
                     break;
                 }
                 else {
@@ -256,6 +324,7 @@
             else {
                 if (ptr.right === null) {
                     ptr.right = new TreeNode(o);
+                    ptr.right.parent = ptr;
                     break;
                 }
                 else {
@@ -284,9 +353,9 @@
      * @return {Iterator} iterator that can be used to traverse the sequence of elements in this list,
      *                    or null if the list is empty
      */
-    BinaryTree.prototype.iterator = function() {
+    BinaryTree.prototype.iterator = function () {
         return new BinaryTreeIterator(this);
-    }
+    };
 
     /**
      * Remove an element at the specified position in this list
@@ -295,7 +364,7 @@
      * @return {Object} element at the specified location
      * @throws {jstl.Exception} if the index is out of range (index < 0 || index >= size())
      */
-    BinaryTree.prototype.remove = function(i) {
+    BinaryTree.prototype.remove = function (i) {
         var ptr;
 
         if (i == undefined || i < 0 || i >= this.size())
@@ -314,16 +383,16 @@
 
         this.count -= 1;
         return ptr.value;
-    }
+    };
 
     /**
      * Return the number of elements in this list
      *
      * @return {integer} number of elements in the list
      */
-    BinaryTree.prototype.size = function() {
+    BinaryTree.prototype.size = function () {
         return this.count;
-    }
+    };
 
     /**
      * <p>Traverse the items in the tree and invoke the specified callback for each item.
@@ -342,8 +411,8 @@
 
         function preorder(node) {
             cb(node.getValue());
-            if (node.left) inorder(node.left);
-            if (node.right) inorder(node.right);
+            if (node.left) preorder(node.left);
+            if (node.right) preorder(node.right);
         }
 
         function inorder(node) {
@@ -353,8 +422,8 @@
         }
 
         function postorder(node) {
-            if (node.left) inorder(node.left);
-            if (node.right) inorder(node.right);
+            if (node.left) postorder(node.left);
+            if (node.right) postorder(node.right);
             cb(node.getValue());
         }
         
@@ -382,7 +451,7 @@
         else {
             inorder(this.root);
         }
-    }
+    };
 
 
     /**
@@ -391,14 +460,14 @@
      * @return {Array} a javascript array of all the elements. Note that this contains references
      *                 to the elements, not copies of the elements.
      */
-    BinaryTree.prototype.toArray = function() {
+    BinaryTree.prototype.toArray = function () {
         var size = this.size(), arr = [ size ], ptr, i;
         for (i = 0, ptr = this.head; i < size; ptr = ptr.next, i++) {
             arr[i] = ptr.value;
         }
       
         return arr;
-    }
+    };
   
     _jstl.util.BinaryTree = BinaryTree;
 }());

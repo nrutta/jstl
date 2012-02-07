@@ -49,6 +49,24 @@ function binary_tree_test(out) {
         s.traverse("depth", cb_depth);
         
         alert("and now by depth (expected: 2 1 4 3 8 7 6,  got: " + agg.toString() + ")");
+        var t = s.contains(3);
+ 
+        var iter = s.iterator();
+        agg = [];
+
+        // test: iterate through each 'next' value and construct an array of expected values.
+        var p = iter.next();
+        for (;  p; p = iter.next()) {
+            agg.push(p);
+        }
+        alert("expected 1 2 3 4 6 7 8, got: " + agg.toString() );
+
+        // test: using the same iterator that is now at the end, iterate through each "prev" and do the same.
+        agg = [];
+        for (p = iter.previous();  p; p = iter.previous()) {
+            agg.push(p);
+        }
+        alert("expected 8,7,6,4,3,2,1 got: " + agg.toString() );
 
         $(out).html("tests passed");
     }
@@ -130,7 +148,7 @@ function linked_list_test() {
 </script>
 </head>
 
-<body onload="init()">
+<body >
 <p>This is the main test harness for jstl</p>
 
 <table width="90%" border=1>

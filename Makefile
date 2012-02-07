@@ -1,15 +1,16 @@
 MANIFEST = js/base.js \
            js/base_collections.js \
            js/base_comparable.js \
+           js/iterator.js \
            js/binaryTree.js \
            js/exception.js \
            js/list.js \
            js/queue.js \
            js/stack.js
 
-VERSION="0.0.2"
+VERSION=0.1.0
 JSDOC ?= `which jsdoc`
-INTERMEDIATE_FILE = ".intermediate.js"
+INTERMEDIATE_FILE = .intermediate.js
 
 #
 # documentation. this uses jsdoc3 and a template that uses bootstrap
@@ -24,10 +25,11 @@ docs: jstl
 #
 
 jstl:
-	rm -f jstl.js
+	rm -f jstl.js jstl-min.js jstl-${VERSION}.js
 	cat ${MANIFEST} >> jstl-${VERSION}.js
 	cat jstl-${VERSION}.js | jsmin > jstl-min-${VERSION}.js
-	ln -s jstl-min-${VERSION}.js jstl.js
+	ln -s jstl-min-${VERSION}.js jstl-min.js
+	ln -s jstl-${VERSION}.js jstl.js
 
 
 

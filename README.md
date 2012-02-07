@@ -18,7 +18,7 @@ I'm going to follow the versioning approach described by the Semantic Versioning
 
 Releases will be numbered as follows:
 
-'<major>.<minor>.<patch>'
+`<major>.<minor>.<patch>`
 
 * major - breaking backwards compatibility will increase the major value.
 * minor - adding new features without breaking backwards compatibility will increase the minor value.
