@@ -51,9 +51,12 @@ _jstl.util.Collections =
             return arr;
         }
         
-        function mergeSort(list) {
-            if (list.length <= 1)
-                return list;
+        function mergeSort(list, start, len) {
+
+            if (len === 0)
+                return [];
+            if (len === 1)
+                return [ list[start] ];
 
             // recursively split the input list in half and call this routine until
             // each side has 0 or 1 element within it. Then merge the two lists in a
@@ -61,15 +64,15 @@ _jstl.util.Collections =
             // as 2 sorted lists that continuously get merged together, until the
             // completed sorted list is retrieved.
             //
-            var half = Math.ceil(list.length / 2);
-            var first = list.slice(0, half);
-            var second = list.slice(half);
-            return merge(mergeSort(first), mergeSort(second));
+            var half = Math.ceil(len / 2);
+            //var first = list.slice(0, half);
+            //var second = list.slice(half);
+            //return merge(mergeSort(first), mergeSort(second));
+            return merge(mergeSort(list, start, half), mergeSort(list, start+half, len-half));
         }
         
         list.clear();
-        debugger;
-        arr = mergeSort(arr);
+        arr = mergeSort(arr, 0, arr.length);
         for (i = 0; i < arr.length; i++)
             list.add(arr[i]);
             
