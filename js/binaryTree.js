@@ -3,7 +3,7 @@
  * @class LinkedList
  * @lends jstl.util.
  */
-(function() {
+jstl.util.BinaryTree = ( function() {
 
     function TreeNode(v, prev, next) { 
         this.value = v || null;
@@ -199,7 +199,7 @@
         this.root = null; //new TreeNode();
         this.maxLevel = 0;
         this.current = null; // used to point at the current node being evaluated
-        this.comparator = new _jstl.util.Comparator(config);
+        this.comparator = new jstl.util.Comparator(config);
         this.count = 0;
     }
 
@@ -288,10 +288,10 @@
             tval = t.getValue();
 
             if (compareFunc(val, tval) <= 0) {
-                return this.insertNode(t.left, n);
+                return insertNode(t.left, n);
             }
             else {
-                return this.insertNode(t.right, n);
+                return insertNode(t.right, n);
             }
             
             return null;
@@ -469,6 +469,6 @@
         return arr;
     };
   
-    _jstl.util.BinaryTree = BinaryTree;
-}());
+    return BinaryTree;
+})();
 

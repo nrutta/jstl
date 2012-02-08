@@ -1,5 +1,5 @@
 
-_jstl.util.Stack = (function() {
+jstl.util.Stack = (function() {
 
   /** @lends jstl */
 
@@ -13,7 +13,7 @@ _jstl.util.Stack = (function() {
    * @this {Stack}
    */
   function Stack() {
-      this._stack = new _jstl.util.LinkedList();
+      this._stack = new jstl.util.LinkedList();
   }
 
   /**
@@ -74,7 +74,6 @@ _jstl.util.Stack = (function() {
       throw new jstlException('StackException', 'Search method is not yet supported');
   }
 
-  //_jstl.util.Stack = Stack;
   return Stack;
 
 })();

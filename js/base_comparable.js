@@ -9,8 +9,7 @@
  *
  */
 
-_jstl.util.Comparator = (function()
-{
+jstl.util.Comparator = (function() {
     var StringComparator = {
         compare: function(e1, e2) {
             if (e1 === e2) return 0;
@@ -71,7 +70,7 @@ _jstl.util.Comparator = (function()
      * @this {LinkedList}
      * @param {Object} cfg contains configuration options
      */   
-    Comparator = function(cfg) {
+    function Comparator(cfg) {
         var config = cfg || {};
 
         this.assertType = config.assertType || null;

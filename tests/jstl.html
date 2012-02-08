@@ -1,7 +1,7 @@
 <html>
 <head>
 <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-<script src="../jstl.js"></script>
+<script data-main="scripts/jstl/require_jstl.js" src="scripts/require.js"></script>
 <script>
 
 $(document).ready(function () {
@@ -26,6 +26,7 @@ $(document).ready(function () {
 });
 
 function binary_tree_test(out) {
+    testMe();
     try {
         var agg = [];
         var s = new jstl.util.BinaryTree({assertType: 'number'});
@@ -116,6 +117,7 @@ function stack_test() {
 function linked_list_test() {
     
     try {
+        debugger;
         var ll = new jstl.util.LinkedList(
                      { assertType: 'number',
                        comparator: {

@@ -1,6 +1,5 @@
 
-_jstl.util.Queue = (function () {
-    "use strict";
+jstl.util.Queue = (function () {
 
     /** @lends jstl */
 
@@ -26,7 +25,7 @@ _jstl.util.Queue = (function () {
             this.max = config.max;
         }
 
-        this.q = new _jstl.util.LinkedList(config);
+        this.q = new jstl.util.LinkedList(config);
         if (this.q === null) {
             throw new jstl.Exception('QueueException', 'Error creating Queue');
         }
@@ -151,9 +150,6 @@ _jstl.util.Queue = (function () {
         }
     };
 
-
-
-    //_jstl.util.Queue = Queue;
     return Queue;
 
-}());
+})();

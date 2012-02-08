@@ -15,7 +15,7 @@
  * @namespace jstl
  */
 
-var _jstl = { util : {}, algorithms: {} };
+var jstl = { util : {}, algorithms: {} };
 
 (function() {
 

@@ -30,6 +30,9 @@ jstl:
 	cat jstl-${VERSION}.js | jsmin > jstl-min-${VERSION}.js
 	ln -s jstl-min-${VERSION}.js jstl-min.js
 	ln -s jstl-${VERSION}.js jstl.js
+	rm -rf ./requirejs
+	mkdir ./requirejs
+	python ./require.py ${MANIFEST}
 
 
 

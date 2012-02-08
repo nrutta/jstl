@@ -6,7 +6,7 @@
  * @class Iterator
  * @lends jstl.util.
  */
-(function() {
+jstl.util.Iterator = (function () {
 
   /**
    * Iterator. Interface for iterator implementations. Specific implementations should inherit this object, and then
@@ -77,5 +77,5 @@
       throw new jstl.Exception('UnsupportedException', 'Iterator interface does not provide previousIndex implementation');
   }
 
-  _jstl.util.Iterator = Iterator;
+  return Iterator;
 })();
