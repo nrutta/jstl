@@ -8,7 +8,7 @@ MANIFEST = js/base.js \
            js/queue.js \
            js/stack.js
 
-VERSION=0.1.0
+VERSION=0.1.1
 JSDOC ?= `which jsdoc`
 INTERMEDIATE_FILE = .intermediate.js
 
@@ -34,6 +34,10 @@ jstl:
 	mkdir ./requirejs
 	python ./require.py ${MANIFEST}
 
+commonjs: jstl
+	cp jstl.js commonjs/jstl/index.js
+	rm -f commonjs/jstl.tar.gz
+	cd commonjs; tar czf ./jstl.tar.gz ./jstl
 
 
 .PHONY: jstl docs

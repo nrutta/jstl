@@ -1,0 +1,19 @@
+{
+    "name" : "jstl",
+    "description" : "Javascript template library",
+    "version" : "0.1.1",
+    "author" : "Neal Rutta <neal@rutta.com>",
+    "main" : "./index",
+    "keywords" : [
+    ],
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/nrutta/jstl.git"
+    },
+    "scripts" : {
+    },
+    "devDependencies" : {
+    },
+    "license" : "MIT/X11",
+    "engines": { "node": "*" }
+}

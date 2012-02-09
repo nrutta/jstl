@@ -15,7 +15,7 @@
  * @namespace jstl
  */
 
-var jstl = { util : {}, algorithms: {} };
+var jstl = { VERSION: '0.1.1', util : {}, algorithms: {} };
 
 (function() {
 
@@ -25,22 +25,13 @@ var jstl = { util : {}, algorithms: {} };
   // Establish the root object, `window` in the browser, or `global` on the server.
   var root = this;
 
-  // Save the previous value of the `_` variable.
-  var previousJstl = root.jstl;
-
   // Export the jstl object for **CommonJS**, with backwards-compatibility
   // for the old `require()` API. If we're not in CommonJS, add `_` to the
   // global object.
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = _jstl;
-    jstl.jstl = _jstl;
+    module.exports = jstl;
   } else {
-    // Exported as a string, for Closure Compiler "advanced" mode.
-    root['jstl'] = _jstl;
+    //root['jstl'] = _jstl;
   }
-
-  // Current version.
-  jstl.VERSION = '0.0.1';
-
 })();
 
