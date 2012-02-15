@@ -10,6 +10,17 @@
  */
 
 jstl.util.Comparator = (function() {
+    function hash(s) {
+        var i, chr, hash = 0;
+        if (s.length === 0) return hash;
+        for (i = 0; i < s.length; i++) {
+            chr = s.charCodeAt(i);
+            hash = ((hash<<5)-hash)+chr;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+    }
+
     var StringComparator = {
         compare: function(e1, e2) {
             if (e1 === e2) return 0;
@@ -19,6 +30,10 @@ jstl.util.Comparator = (function() {
 
         equals: function(e1, e2) {
             return (e1 === e2);
+        },
+        
+        hashCode: function(s) {
+            return hash(s); 
         }
     };
 
@@ -31,6 +46,10 @@ jstl.util.Comparator = (function() {
 
         equals: function(e1, e2) {
             return (e1 === e2);
+        },
+        
+        hashCode: function(n) {
+            return hash("" + n);
         }
     };
 
@@ -102,6 +121,10 @@ jstl.util.Comparator = (function() {
                 // this.comparator is previously set from cfg parameter .. hopefully
             }
         }
+        
+        this.compare = (this.comparator) ? this.comparator.compare : null;
+        this.equals = (this.comparator) ? this.comparator.equals : null;
+        this.hashCode = (this.comparator) ? this.comparator.hashCode : null;
     }
 
     /**
@@ -129,6 +152,7 @@ jstl.util.Comparator = (function() {
     
     Comparator.prototype.getEqualsFunction = function() { return (this.comparator) ? this.comparator.equals : null; };
     Comparator.prototype.getCompareFunction = function() { return (this.comparator) ? this.comparator.compare : null; };
+    Comparator.prototype.getHashCode = function() { return (this.comparator) ? this.comparator.hashCode : null; };
    
     return Comparator;
 })();

@@ -16,6 +16,7 @@ $(document).ready(function () {
         case 'binarytree': func = binary_tree_test; break;
         case 'queue':      func = queue_test; break;
         case 'linkedlist': func = linked_list_test; break;
+        case 'hashmap':    func = hashmap_test; break;
         case 'stack':      func = stack_test; break;
         default:           alert("invalid test"); return;
         }
@@ -77,6 +78,26 @@ function binary_tree_test(out) {
 
 }
 
+
+function hashmap_test(out) {
+    try {
+        var hm = new jstl.util.HashMap({assertType: "string" });
+        for (var i = 0; i < 250; i+= 1) {
+            hm.put("foobar" + i, i);
+        }
+        var arr = [];
+        hm.each( function(k, v) {
+            var l = k.split("r");
+            arr[ l[1] ] = v;
+        });
+
+        debugger;
+        $(out).html("tests passed");
+    }
+    catch (e) {
+        debugger;
+    }
+}
 
 
 function queue_test() {
@@ -172,6 +193,10 @@ function linked_list_test() {
 </tr>
 <tr>
     <td><button data-test-type="linkedlist">LinkedList Tests</button></td>
+    <td><span class=output></span></td>
+</tr>
+<tr>
+    <td><button data-test-type="hashmap">HashMap Tests</button></td>
     <td><span class=output></span></td>
 </tr>
 </table>

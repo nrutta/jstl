@@ -4,6 +4,7 @@ MANIFEST = js/base.js \
            js/iterator.js \
            js/binaryTree.js \
            js/exception.js \
+           js/hashMap.js \
            js/list.js \
            js/queue.js \
            js/stack.js
